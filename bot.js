@@ -1,6 +1,3 @@
-API_KEY = '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';
-CHANNEL_ID = '1135917053044338688'; // Chat gpt channel
-
 require('dotenv').config();
 const fs = require('fs');
 const path = require('node:path');
@@ -49,7 +46,7 @@ client.on('ready', (c) => {
 
 const { OpenAIApi, Configuration } = require('openai');
 const configuration = new Configuration({ 
-  apiKey: API_KEY,
+  apiKey: process.env.API_KEY,
 })
 
 const openai = new OpenAIApi(configuration);
@@ -57,7 +54,7 @@ const openai = new OpenAIApi(configuration);
 client.on('messageCreate', async (message) => {
   try{
   if (message.author.bot) return;
-  if (message.channel.id !== CHANNEL_ID) return;
+  if (message.channel.id !== process.env.CHANNEL_ID) return;
   if (message.content.startsWith('!')) return;
     
     if (message.content.length >= 1901){
@@ -376,6 +373,38 @@ client.on('messageCreate', (message) => {
 
 });
 
+client.on('messageDelete', (message) => {
+  const deletelogs = "1205499971843919922";
+  const exampleEmbed = new EmbedBuilder()
+  .setColor('Red')
+  .setTitle(`**Message deleted in #${message.channel.name}**`)
+  .setAuthor({ name: `${message.author.username} || ${message.author.displayName}`, iconURL: message.author.displayAvatarURL() })
+  .setDescription(`${message.content}`)
+  .setTimestamp()
+  .setFooter({ text: `Message ID: ${message.id}` });
+
+  if (message.author.bot) { return; }
+  const channel = message.guild.channels.cache.get(deletelogs);
+  channel.send({ embeds: [exampleEmbed] });
+})
+
+
+client.on('messageUpdate', async (oldMessage, newMessage) => {
+  const editlogs = "1205499971843919922";
+  const exampleEmbed = new EmbedBuilder()
+  .setColor(0x0099FF)
+  .setTitle(`**Message edited in #${oldMessage.channel.name}**`)
+  .setAuthor({ name: `${oldMessage.author.username} || ${oldMessage.author.displayName}`, iconURL: oldMessage.author.displayAvatarURL() })
+  .setDescription(`**Before: **${oldMessage.content}\n**+After: **${newMessage.content}`)
+  .setTimestamp()
+  .setFooter({ text: `Message ID: ${oldMessage.id}` });
+
+  if (oldMessage.author.bot) { return; }
+  const channel = oldMessage.guild.channels.cache.get(editlogs);
+  channel.send({ embeds: [exampleEmbed] });
+})
+
+
 client.on('guildMemberAdd', (member) => {
   const welcomechannelId = "1028875803271897118";
   const exampleEmbed = new EmbedBuilder()
@@ -386,8 +415,6 @@ client.on('guildMemberAdd', (member) => {
     .setThumbnail(member.user.avatarURL())
     .setImage('https://media.discordapp.net/attachments/1125308060190130206/1128582985076199465/received_290408716813873.gif')
     .setTimestamp()
-  //.setFooter({ text: 'Some footer text here'/*, iconURL: ''*/ });
-
   const channel = member.guild.channels.cache.get(welcomechannelId);
   channel.send({ embeds: [exampleEmbed] });
 });
@@ -407,6 +434,5 @@ client.on('guildMemberRemove', (member) => {
 });
 
 client.login(process.env.token);
+/*client.login('TOKEN');*/
 keepAlive();
-
-
