@@ -1,4 +1,3 @@
-TOKEN = 'MTEyODU3NDE1Njg4ODM0NjYyNA.G8bOQn.GOYC1ad73umUSKbJe3ljO5E-_W5Zuim8FANQfM';
 API_KEY = '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';
 CHANNEL_ID = '1135917053044338688'; // Chat gpt channel
 
@@ -407,7 +406,7 @@ client.on('guildMemberRemove', (member) => {
   channel.send({ embeds: [exampleEmbed] });
 });
 
-client.login(TOKEN);
+client.login(process.env.token);
 keepAlive();
 
 
