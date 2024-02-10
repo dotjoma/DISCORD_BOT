@@ -13,7 +13,7 @@ const second = currentDate.getSeconds();
 const formattedDateTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 
 server.all('/', (req, res) => {
-  res.send('Bot Status: [RUNNING].', formattedDateTime);
+  res.send('Bot Status: [RUNNING].');
 });
 
 
